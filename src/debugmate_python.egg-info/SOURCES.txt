@@ -1,0 +1,13 @@
+LICENSE
+README.md
+pyproject.toml
+setup.py
+src/debugmate/__init__.py
+src/debugmate/debugmate.py
+src/debugmate/example.py
+src/debugmate/django/__init__.py
+src/debugmate/django/middleware.py
+src/debugmate_python.egg-info/PKG-INFO
+src/debugmate_python.egg-info/SOURCES.txt
+src/debugmate_python.egg-info/dependency_links.txt
+src/debugmate_python.egg-info/top_level.txt

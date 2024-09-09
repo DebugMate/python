@@ -1,0 +1,18 @@
+[project]
+name = "debugmate_python"
+version = "0.0.1"
+authors = [
+  { name="Devsquad", email="ti@devsquad.com" },
+]
+description = "Debugmate client package"
+readme = "README.md"
+requires-python = ">=3.8"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+
+[project.urls]
+Homepage = "https://github.com/DebugMate/python"
+Issues = "https://github.com/DebugMate/python/issues"
