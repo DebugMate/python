@@ -1,0 +1,4 @@
+
+/venv
+/src/debugmate.egg-info
+/src/debugmate/__pycache__
