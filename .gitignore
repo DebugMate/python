@@ -2,3 +2,8 @@
 /venv
 /src/debugmate.egg-info
 /src/debugmate/__pycache__
+/src/debugmate_python.egg-info
+/src/debugmate/django/__pycache__
+.DS_Store
+src/debugmate/.DS_Store
+.idea
