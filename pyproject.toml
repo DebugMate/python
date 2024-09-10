@@ -1,5 +1,5 @@
 [project]
-name = "debugmate_python"
+name = "debugmate"
 version = "0.0.1"
 authors = [
   { name="Devsquad", email="ti@devsquad.com" },
