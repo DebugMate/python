@@ -5,9 +5,9 @@ import os
 from django.conf import settings
 from django.utils.timezone import now
 from django.urls import resolve
-from django.template import TemplateDoesNotExist
 from debugmate.request_context import RequestContext
 from debugmate.stack_trace_context import StackTraceContext
+from pathlib import PosixPath
 
 class DebugmateAPI:
     @staticmethod
@@ -21,7 +21,7 @@ class DebugmateAPI:
             "message": str(exception),
             "file": exception_location['file'],
             "line": exception_location['line'],
-            "code": exception_location['code_snippet'],
+            "code": 0,
             "resolved_at": None,
             "type": 'web',
             "url": request.build_absolute_uri() if request else '',
@@ -35,6 +35,7 @@ class DebugmateAPI:
             "timestamp": now().isoformat(),
             "level": level,
         }
+
         try:
             response = requests.post(
                 settings.DEBUGMATE_API_URL + '/api/capture',
@@ -44,24 +45,20 @@ class DebugmateAPI:
                     'Content-Type': 'application/json',
                     'Accept': 'application/json'
                 },
-                timeout=5
+                timeout=60
             )
+
         except requests.RequestException:
             pass
 
     @staticmethod
     def get_app_context(request, exception):
-        # Verifica se a aplicação está rodando no console
         if request is None:
             return {}
 
-        # Captura detalhes da rota e do controlador (view)
-        route_name = request.resolver_match.view_name
+        route_name = request.resolver_match.route
         route_params = request.resolver_match.kwargs
         middlewares = request.META.get('MIDDLEWARE', [])
-
-        # Verifica se a exceção está relacionada a uma View (pode ser ajustado conforme a lógica do seu projeto)
-        is_view_exception = isinstance(exception, TemplateDoesNotExist)
 
         return {
             'controller': request.resolver_match.func.__name__,
@@ -71,8 +68,8 @@ class DebugmateAPI:
             },
             'middlewares': middlewares,
             'view': {
-                'name': exception.template_name if is_view_exception else None,
-                'data': list(exception.args) if is_view_exception else []
+                'name': request.resolver_match.view_name,
+                'data': []
             }
         }
 
@@ -103,20 +100,30 @@ class DebugmateAPI:
             }
         return {}
 
+    @staticmethod
     def get_environment_settings():
-        # Seleciona algumas configurações relevantes do Django para enviar como JSON
         environment_settings = {
             "DEBUG": settings.DEBUG,
             "ALLOWED_HOSTS": settings.ALLOWED_HOSTS,
             "INSTALLED_APPS": settings.INSTALLED_APPS,
-            "DATABASES": settings.DATABASES,
-            "MIDDLEWARE": settings.MIDDLEWARE,
+            "DATABASES": DebugmateAPI.convert_environment_value(settings.DATABASES),
+            "MIDDLEWARE": DebugmateAPI.convert_environment_value(settings.MIDDLEWARE),
             "TEMPLATES": settings.TEMPLATES,
             "TIME_ZONE": settings.TIME_ZONE,
             "LANGUAGE_CODE": settings.LANGUAGE_CODE,
         }
-        # Converte as configurações para JSON para o campo `environment`
-        return json.dumps(environment_settings, default=str)  # Converte para string JSON
+
+        return environment_settings
+
+    @staticmethod
+    def convert_environment_value(value):
+        if isinstance(value, PosixPath):
+            return str(value)  # Convert PosixPath to string
+        if isinstance(value, dict):
+            return {k: DebugmateAPI.convert_environment_value(v) for k, v in value.items()}  # Recursively handle dictionaries
+        if isinstance(value, list):
+            return [DebugmateAPI.convert_environment_value(v) for v in value]  # Recursively handle lists
+        return value
 
     @staticmethod
     def get_exception_location(exception):
