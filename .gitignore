@@ -7,3 +7,4 @@
 .DS_Store
 src/debugmate/.DS_Store
 .idea
+/tests/__pycache__
