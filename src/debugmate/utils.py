@@ -38,15 +38,16 @@ class DebugmateAPI:
 
         try:
             response = requests.post(
-                settings.DEBUGMATE_API_URL + '/webhook',
+                settings.DEBUGMATE_DOMAIN + '/webhook',
                 json=error_data,
                 headers={
-                    'X-DEBUGMATE-TOKEN': settings.DEBUGMATE_API_TOKEN,
+                    'X-DEBUGMATE-TOKEN': settings.DEBUGMATE_TOKEN,
                     'Content-Type': 'application/json',
                     'Accept': 'application/json'
                 },
                 timeout=60
             )
+
         except requests.RequestException:
             pass
 

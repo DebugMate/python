@@ -7,5 +7,7 @@ setup(
     packages=find_packages(where='src'),
     install_requires=[
         'requests',
+        'django',
+        'six',
     ],
 )
