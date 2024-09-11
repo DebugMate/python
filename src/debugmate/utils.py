@@ -5,9 +5,9 @@ import os
 from django.conf import settings
 from django.utils.timezone import now
 from django.urls import resolve
-from debugmate.request_context import RequestContext
-from debugmate.stack_trace_context import StackTraceContext
-from pathlib import PosixPath
+from debugmate.context.request_context import RequestContext
+from debugmate.context.stack_trace_context import StackTraceContext
+from debugmate.context.environment_context import EnvironmentContext
 
 class DebugmateAPI:
     @staticmethod
@@ -31,14 +31,14 @@ class DebugmateAPI:
             "user": DebugmateAPI.get_user_context(request),
             "context": {},
             "request": RequestContext(request).get_context(),
-            "environment": DebugmateAPI.get_environment_settings(),
+            "environment": EnvironmentContext(request).get_context(),
             "timestamp": now().isoformat(),
             "level": level,
         }
 
         try:
             response = requests.post(
-                settings.DEBUGMATE_API_URL + '/api/capture',
+                settings.DEBUGMATE_API_URL + '/webhook',
                 json=error_data,
                 headers={
                     'X-DEBUGMATE-TOKEN': settings.DEBUGMATE_API_TOKEN,
@@ -47,7 +47,6 @@ class DebugmateAPI:
                 },
                 timeout=60
             )
-
         except requests.RequestException:
             pass
 
@@ -99,31 +98,6 @@ class DebugmateAPI:
                 "headers": {k: v for k, v in request.headers.items()},
             }
         return {}
-
-    @staticmethod
-    def get_environment_settings():
-        environment_settings = {
-            "DEBUG": settings.DEBUG,
-            "ALLOWED_HOSTS": settings.ALLOWED_HOSTS,
-            "INSTALLED_APPS": settings.INSTALLED_APPS,
-            "DATABASES": DebugmateAPI.convert_environment_value(settings.DATABASES),
-            "MIDDLEWARE": DebugmateAPI.convert_environment_value(settings.MIDDLEWARE),
-            "TEMPLATES": settings.TEMPLATES,
-            "TIME_ZONE": settings.TIME_ZONE,
-            "LANGUAGE_CODE": settings.LANGUAGE_CODE,
-        }
-
-        return environment_settings
-
-    @staticmethod
-    def convert_environment_value(value):
-        if isinstance(value, PosixPath):
-            return str(value)  # Convert PosixPath to string
-        if isinstance(value, dict):
-            return {k: DebugmateAPI.convert_environment_value(v) for k, v in value.items()}  # Recursively handle dictionaries
-        if isinstance(value, list):
-            return [DebugmateAPI.convert_environment_value(v) for v in value]  # Recursively handle lists
-        return value
 
     @staticmethod
     def get_exception_location(exception):

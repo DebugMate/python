@@ -43,7 +43,7 @@ class DebugmateAPITest(TestCase):
             DebugmateAPI.send_exception_to_api(e, request)
 
         mock_post.assert_called_once()
-        self.assertIn(settings.DEBUGMATE_API_URL + '/api/capture', mock_post.call_args[0])
+        self.assertIn(settings.DEBUGMATE_API_URL + '/webhook', mock_post.call_args[0])
         headers = mock_post.call_args[1]['headers']
         self.assertEqual(headers['X-DEBUGMATE-TOKEN'], settings.DEBUGMATE_API_TOKEN)
         self.assertEqual(headers['Content-Type'], 'application/json')
