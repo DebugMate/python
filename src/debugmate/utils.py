@@ -38,10 +38,10 @@ class DebugmateAPI:
 
         try:
             response = requests.post(
-                settings.DEBUGMATE_API_URL + '/api/capture',
+                settings.DEBUGMATE_DOMAIN + '/api/capture',
                 json=error_data,
                 headers={
-                    'X-DEBUGMATE-TOKEN': settings.DEBUGMATE_API_TOKEN,
+                    'X-DEBUGMATE-TOKEN': settings.DEBUGMATE_TOKEN,
                     'Content-Type': 'application/json',
                     'Accept': 'application/json'
                 },

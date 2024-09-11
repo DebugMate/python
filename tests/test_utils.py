@@ -13,8 +13,8 @@ class DebugmateAPITest(TestCase):
 
     def setUp(self):
         self.factory = RequestFactory()
-        settings.DEBUGMATE_API_URL = 'https://example.com'
-        settings.DEBUGMATE_API_TOKEN = 'fake-token'
+        settings.DEBUGMATE_DOMAIN = 'https://example.com'
+        settings.DEBUGMATE_TOKEN = 'fake-token'
 
     @patch('requests.post')
     def test_send_exception_to_api(self, mock_post):
@@ -43,9 +43,9 @@ class DebugmateAPITest(TestCase):
             DebugmateAPI.send_exception_to_api(e, request)
 
         mock_post.assert_called_once()
-        self.assertIn(settings.DEBUGMATE_API_URL + '/api/capture', mock_post.call_args[0])
+        self.assertIn(settings.DEBUGMATE_DOMAIN + '/api/capture', mock_post.call_args[0])
         headers = mock_post.call_args[1]['headers']
-        self.assertEqual(headers['X-DEBUGMATE-TOKEN'], settings.DEBUGMATE_API_TOKEN)
+        self.assertEqual(headers['X-DEBUGMATE-TOKEN'], settings.DEBUGMATE_TOKEN)
         self.assertEqual(headers['Content-Type'], 'application/json')
 
         data = mock_post.call_args[1]['json']
