@@ -40,9 +40,6 @@ DEBUGMATE_TOKEN = os.getenv('DEBUGMATE_TOKEN', '')
 DEBUGMATE_DOMAIN = os.getenv('DEBUGMATE_DOMAIN', '')
 ```
 
-- DEBUGMATE_TOKEN: Replace with your API token provided by Debugmate or configure it in an environment variable.
-- DEBUGMATE_DOMAIN: Change the API URL.
-
 # 2. Add the Middleware
 In your settings.py, add the DebugmateMiddleware to the list of middlewares.
 
