@@ -7,7 +7,7 @@ This guide explains how to integrate `debugmate-python` into your Django applica
 To install the `debugmate-python` package, run the following command:
 
 ```bash
-pip install -i https://pypi.org/simple/ debugmate-python
+pip install -i https://pypi.org/simple/ debugmate
 ```
 
 # Configuration in settings.py

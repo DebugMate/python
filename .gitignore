@@ -1,12 +1,15 @@
 
 /venv
 /src/debugmate.egg-info
-/src/debugmate/__pycache__
+/debugmate/__pycache__
 /src/debugmate_python.egg-info
-/src/debugmate/context/__pycache__
-/src/debugmate/django/__pycache__
+/debugmate/context/__pycache__
+/debugmate/django/__pycache__
+/debugmate/handlers/__pycache__
 .DS_Store
-src/debugmate/.DS_Store
+debugmate/.DS_Store
 .idea
 /tests/__pycache__
 /dist
+/debugmate.egg-info
+/build

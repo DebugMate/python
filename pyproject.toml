@@ -1,6 +1,6 @@
 [project]
 name = "debugmate"
-version = "0.0.1"
+version = "0.1.5"
 authors = [
   { name="Devsquad", email="ti@devsquad.com" },
 ]
@@ -11,6 +11,10 @@ classifiers = [
     "Programming Language :: Python :: 3",
     "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent",
+]
+dependencies = [
+    "django",
+    "requests"
 ]
 
 [project.urls]
